@@ -1,7 +1,9 @@
 package com.whattowatch;
 
-import com.whattowatch.model.Movie;
-import com.whattowatch.repository.MovieRepository;
+import com.whattowatch.model.User;
+import com.whattowatch.model.VisualMedia;
+import com.whattowatch.repository.UserRepository;
+import com.whattowatch.repository.VisualMediaRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,10 +17,12 @@ public class WhatToWatchApplication {
 	}
 
 	@Bean
-	CommandLineRunner initDatabase(MovieRepository repository) {
+	CommandLineRunner initDatabase(UserRepository userRepository, VisualMediaRepository visualMediaRepository) {
 		return args -> {
-			repository.save(new Movie(null, "The Matrix", 5, "Sérgio Giordanno"));
-			repository.save(new Movie(null, "The Godfather ", 5, "André Manoel"));
+			userRepository.save(new User(null,"Sérgio Giordanno",29,"sergio@teste.com"));
+			userRepository.save(new User(null,"Gabriella Medeiros",30,"gabriella@teste.com"));
+			visualMediaRepository.save(new VisualMedia(null,"The Matrix",5, "Sérgio Giordanno"));
+			visualMediaRepository.save(new VisualMedia(null,"The Godfather",5,"Gabriella Medeiros"));
 		};
 	}
 
