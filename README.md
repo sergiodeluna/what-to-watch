@@ -63,13 +63,7 @@ Make sure to write tests for new features and bug fixes to maintain high quality
 
 ## Contributing
 
-We welcome contributions to make the app even better! If you'd like to contribute, please follow these steps:
-
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Write tests for any new features.
-4. Make your changes and ensure the tests pass.
-5. Submit a pull request describing your changes.
+We welcome suggestions and improvements to make the app even better! However, as this project is proprietary, any contributions must be submitted for approval by the author. If you'd like to contribute, please contact the author directly to discuss potential changes.
 
 ## License
 
