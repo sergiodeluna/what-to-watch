@@ -21,4 +21,9 @@ public class MovieController {
 
     @DeleteMapping("/{id}")
     public void deleteMovie(@PathVariable Long id) { service.deleteMovie(id); }
+
+    @PutMapping("/{id}")
+    public Movie updateMovie(@PathVariable Long id, @RequestBody Movie movieDetails) {
+        return service.updateMovie(id, movieDetails);
+    }
 }
