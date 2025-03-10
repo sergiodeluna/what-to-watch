@@ -15,7 +15,7 @@ const VisualMediaForm = ({ visualMedia, onSave }) => {
         } else {
             await createVisualMedia(mediaData);
         }
-        onSave();
+        onSave(); // Chama a função de callback para atualizar a lista
     };
 
     return (

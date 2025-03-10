@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import UserList from '../components/User/UserList';
 import UserForm from '../components/User/UserForm';
 
@@ -6,11 +7,17 @@ const Users = () => {
     const [refresh, setRefresh] = useState(false);
 
     return (
-        <div>
-            <h1>Users</h1>
-            <UserForm onSave={() => setRefresh(!refresh)} />
-            <UserList />
-        </div>
+        <Routes>
+            <Route path="/" element={<UserList />} />
+            <Route
+                path="/new"
+                element={<UserForm onSave={() => setRefresh(!refresh)} />}
+            />
+            <Route
+                path="/edit/:id"
+                element={<UserForm onSave={() => setRefresh(!refresh)} />}
+            />
+        </Routes>
     );
 };
 

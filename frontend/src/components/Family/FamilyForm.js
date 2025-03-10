@@ -13,7 +13,7 @@ const FamilyForm = ({ family, onSave }) => {
         } else {
             await createFamily(familyData);
         }
-        onSave();
+        onSave(); // Chama a função de callback para atualizar a lista
     };
 
     return (

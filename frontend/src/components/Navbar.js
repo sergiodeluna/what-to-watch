@@ -7,7 +7,7 @@ const Navbar = () => {
         <nav className="bg-gradient-to-r from-futuristic-purple to-futuristic-blue p-4 shadow-lg">
             <div className="container mx-auto flex justify-between items-center">
                 <Link to="/" className="text-white text-2xl font-bold flex items-center">
-                    <FaRocket className="mr-2 animate-pulse-slow" /> Family Media
+                    <FaRocket className="mr-2 animate-pulse-slow" /> What to Watch?
                 </Link>
                 <div className="space-x-4 flex items-center">
                     <Link to="/" className="text-white hover:text-futuristic-teal flex items-center">
