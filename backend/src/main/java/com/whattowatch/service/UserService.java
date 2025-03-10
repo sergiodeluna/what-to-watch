@@ -2,31 +2,30 @@ package com.whattowatch.service;
 
 import com.whattowatch.model.User;
 import com.whattowatch.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
+    private final UserRepository userRepository;
 
-    @Autowired
-    private UserRepository repository;
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
 
-    public List<User> getAllUsers() { return repository.findAll(); }
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
 
-    public User saveUser(User user) { return repository.save(user); }
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
 
-    public void deleteUser(Long id) { repository.deleteById(id); }
-
-    public User updateUser(Long id, User userDetails) {
-        return repository.findById(id)
-                .map(user -> {
-                    user.setName(userDetails.getName());
-                    user.setAge(userDetails.getAge());
-                    user.setEmail(userDetails.getEmail());
-                    return repository.save(user);
-                })
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
     }
 }

@@ -1,18 +1,21 @@
 package com.whattowatch.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Family {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +24,20 @@ public class Family {
     @NotBlank(message = "LastName cannot be blank")
     private String lastName;
 
-    @ManyToMany
-    @JoinTable(
-            name = "family_user",
-            joinColumns = @JoinColumn(name = "family_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    @JsonManagedReference
-    private List<User> users;
+    @ManyToMany(mappedBy = "families")
+    @Builder.Default
+    private Set<User> users = new HashSet<>();
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, lastName);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Family family = (Family) o;
+        return id.equals(family.id);
+    }
 }

@@ -1,30 +1,39 @@
 package com.whattowatch.controller;
 
-import com.whattowatch.model.dto.FamilyDTO;
 import com.whattowatch.model.Family;
 import com.whattowatch.service.FamilyService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/family")
+@RequestMapping("/families")
+@RequiredArgsConstructor
 public class FamilyController {
-    @Autowired
-    private FamilyService service;
+    private final FamilyService familyService;
 
     @GetMapping
-    public List<Family> getAllFamilies() { return service.getAllFamilies(); }
+    public List<Family> getAllFamilies() {
+        return familyService.findAllFamilies();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Family> getFamilyById(@PathVariable Long id) {
+        return familyService.findFamilyById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
     @PostMapping
-    public Family addFamily(@RequestBody FamilyDTO familyDTO) { return service.saveFamily(familyDTO); }
+    public Family addFamily(@RequestBody Family family) {
+        return familyService.saveFamily(family);
+    }
 
     @DeleteMapping("/{id}")
-    public void deleteFamily(@PathVariable Long id) { service.deleteFamily(id); }
-
-    @PutMapping("/{id}")
-    public Family updateFamily(@PathVariable Long id, @RequestBody FamilyDTO familyDTODetails) {
-        return service.updateFamily(id, familyDTODetails);
+    public ResponseEntity<Void> deleteFamily(@PathVariable Long id) {
+        familyService.deleteFamilyById(id);
+        return ResponseEntity.noContent().build();
     }
 }

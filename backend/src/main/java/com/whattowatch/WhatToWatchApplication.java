@@ -11,7 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootApplication
 public class WhatToWatchApplication {
@@ -22,16 +23,29 @@ public class WhatToWatchApplication {
 
 	@Bean
 	CommandLineRunner initDatabase(FamilyRepository familyRepository, UserRepository userRepository, VisualMediaRepository visualMediaRepository) {
-		User firstUser = new User(null,"Sérgio Giordanno",29,"sergio@teste.com", null);
-		User secondUser = new User(null,"Gabriella Medeiros",30,"gabriella@teste.com", null);
+		User firstUser = new User(null, "Sérgio Giordanno", 29, "sergio@teste.com", new HashSet<>());
+		User secondUser = new User(null, "Gabriella Medeiros", 30, "gabriella@teste.com", new HashSet<>());
 
 		return args -> {
 			userRepository.save(firstUser);
 			userRepository.save(secondUser);
-			familyRepository.save(new Family(null, "Luna", new ArrayList<>(userRepository.findAll())));
-			visualMediaRepository.save(new VisualMedia(null,"The Matrix",5, "Sérgio Giordanno"));
-			visualMediaRepository.save(new VisualMedia(null,"The Godfather",5,"Gabriella Medeiros"));
+
+			// Save Family
+			Family lunaFamily = new Family(null, "Luna", new HashSet<>(Set.of(firstUser, secondUser)));
+			familyRepository.save(lunaFamily);
+
+			// Associate family to users
+			firstUser.getFamilies().add(lunaFamily);
+			secondUser.getFamilies().add(lunaFamily);
+
+			userRepository.save(firstUser);
+			userRepository.save(secondUser);
+
+			// Save VisualMedia
+			visualMediaRepository.save(new VisualMedia(null, "The Matrix", 5, "Sérgio Giordanno"));
+			visualMediaRepository.save(new VisualMedia(null, "The Godfather", 5, "Gabriella Medeiros"));
 		};
 	}
+
 
 }
