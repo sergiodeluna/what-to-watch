@@ -27,11 +27,16 @@ public class VisualMediaController {
     @PostMapping
     public VisualMedia addVisualMedia(@RequestBody VisualMedia visualMedia) { return visualMediaService.saveVisualMedia(visualMedia); }
 
-    @DeleteMapping("/{id}")
-    public void deleteVisualMedia(@PathVariable Long id) { visualMediaService.deleteVisualMedia(id); }
-
     @PutMapping("/{id}")
-    public VisualMedia updateVisualMedia(@PathVariable Long id, @RequestBody VisualMedia visualMediaDetails) {
-        return visualMediaService.updateVisualMedia(id, visualMediaDetails);
+    public ResponseEntity<VisualMedia> updateVisualMediaById(@PathVariable Long id, @RequestBody VisualMedia visualMediaDetails) {
+        return visualMediaService.updateVisualMediaById(id, visualMediaDetails)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteVisualMedia(@PathVariable Long id) {
+        visualMediaService.deleteVisualMedia(id);
+        return ResponseEntity.noContent().build();
     }
 }

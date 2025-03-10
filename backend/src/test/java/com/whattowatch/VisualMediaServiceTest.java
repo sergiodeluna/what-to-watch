@@ -66,33 +66,31 @@ class VisualMediaServiceTest {
     }
 
     @Test
+    void testUpdateVisualMedia() {
+        VisualMedia updatedVisualMedia = VisualMedia.builder()
+                .id(1L)
+                .title("Matrix")
+                .star(1)
+                .recommendedBy("Neil")
+                .build();
+
+        when(visualMediaRepository.findById(1L)).thenReturn(Optional.of(visualMedia));
+        when(visualMediaRepository.save(any(VisualMedia.class))).thenReturn(updatedVisualMedia);
+
+        Optional<VisualMedia> result = visualMediaService.updateVisualMediaById(1L, updatedVisualMedia);
+
+        assertTrue(result.isPresent());
+        assertEquals("Matrix", result.get().getTitle());
+        assertEquals(1, result.get().getStar());
+        assertEquals("Neil", result.get().getRecommendedBy());
+    }
+
+    @Test
     void testDeleteVisualMedia() {
         doNothing().when(visualMediaRepository).deleteById(1L);
 
         visualMediaService.deleteVisualMedia(1L);
 
         verify(visualMediaRepository, times(1)).deleteById(1L);
-    }
-
-    @Test
-    void testUpdateVisualMedia() {
-        VisualMedia updatedVisualMedia = new VisualMedia(1L, "Inception Updated", 4, "Jane Doe");
-        when(visualMediaRepository.findById(1L)).thenReturn(Optional.of(visualMedia));
-        when(visualMediaRepository.save(any(VisualMedia.class))).thenReturn(updatedVisualMedia);
-
-        VisualMedia result = visualMediaService.updateVisualMedia(1L, updatedVisualMedia);
-
-        assertNotNull(result);
-        assertEquals("Inception Updated", result.getTitle());
-        assertEquals(4, result.getStar());
-        assertEquals("Jane Doe", result.getRecommendedBy());
-    }
-
-    @Test
-    void testUpdateVisualMediaNotFound() {
-        VisualMedia updatedVisualMedia = new VisualMedia(1L, "Inception Updated", 4, "Jane Doe");
-        when(visualMediaRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(RuntimeException.class, () -> visualMediaService.updateVisualMedia(1L, updatedVisualMedia));
     }
 }

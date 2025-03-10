@@ -4,8 +4,10 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.whattowatch.model.Family;
+import com.whattowatch.model.User;
 import com.whattowatch.repository.FamilyRepository;
 import com.whattowatch.service.FamilyService;
+import com.whattowatch.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -19,14 +21,26 @@ class FamilyServiceTest {
     @InjectMocks
     private FamilyService familyService;
 
+    @Mock
+    private UserService userService;
+
     private Family family;
+    private User user;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        user = User.builder()
+                .id(1L)
+                .name("John Doe")
+                .age(30)
+                .email("john.doe@example.com")
+                .build();
+
         family = Family.builder()
                 .id(1L)
                 .lastName("Smith")
+                .users(Set.of(user))
                 .build();
     }
 
@@ -55,13 +69,32 @@ class FamilyServiceTest {
 
     @Test
     void testSaveFamily() {
-        when(familyRepository.save(family)).thenReturn(family);
+        when(userService.findOrAddUser(any(User.class))).thenReturn(user);
+        when(familyRepository.save(any(Family.class))).thenReturn(family);
 
         Family result = familyService.saveFamily(family);
 
         assertNotNull(result);
         assertEquals("Smith", result.getLastName());
+        assertFalse(result.getUsers().isEmpty());
     }
+
+    @Test
+    void testUpdateFamily() {
+        Family updatedFamily = Family.builder()
+                .id(1L)
+                .lastName("Johnson")
+                .build();
+
+        when(familyRepository.findById(1L)).thenReturn(Optional.of(family));
+        when(familyRepository.save(any(Family.class))).thenReturn(updatedFamily);
+
+        Optional<Family> result = familyService.updateFamilyById(1L, updatedFamily);
+
+        assertTrue(result.isPresent());
+        assertEquals("Johnson", result.get().getLastName());
+    }
+
 
     @Test
     void testDeleteFamilyById() {

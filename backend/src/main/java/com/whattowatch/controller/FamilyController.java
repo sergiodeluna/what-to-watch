@@ -31,6 +31,13 @@ public class FamilyController {
         return familyService.saveFamily(family);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Family> updateFamilyById(@PathVariable Long id, @RequestBody Family familyDetails) {
+        return familyService.updateFamilyById(id, familyDetails)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFamily(@PathVariable Long id) {
         familyService.deleteFamilyById(id);

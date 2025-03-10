@@ -56,6 +56,29 @@ class UserServiceTest {
     }
 
     @Test
+    void testFindOrAddUser_WhenUserExists() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        User result = userService.findOrAddUser(user);
+
+        assertNotNull(result);
+        assertEquals(user.getId(), result.getId());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void testFindOrAddUser_WhenUserDoesNotExist() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
+        when(userRepository.save(user)).thenReturn(user);
+
+        User result = userService.findOrAddUser(user);
+
+        assertNotNull(result);
+        assertEquals(user.getId(), result.getId());
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
     void testSaveUser() {
         when(userRepository.save(user)).thenReturn(user);
 
@@ -63,6 +86,26 @@ class UserServiceTest {
 
         assertNotNull(result);
         assertEquals("john.doe@example.com", result.getEmail());
+    }
+
+    @Test
+    void testUpdateUser() {
+        User updatedUser = User.builder()
+                .id(1L)
+                .name("Jane Doe")
+                .age(28)
+                .email("jane.doe@example.com")
+                .build();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(updatedUser);
+
+        Optional<User> result = userService.updateUserById(1L, updatedUser);
+
+        assertTrue(result.isPresent());
+        assertEquals("Jane Doe", result.get().getName());
+        assertEquals(28, result.get().getAge());
+        assertEquals("jane.doe@example.com", result.get().getEmail());
     }
 
     @Test
