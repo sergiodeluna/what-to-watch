@@ -6,20 +6,18 @@ import { Link } from 'react-router-dom';
 const UserList = () => {
     const [users, setUsers] = useState([]);
 
-    // Função para carregar os usuários
     const fetchUsers = async () => {
         const response = await getUsers();
         setUsers(response.data);
     };
 
-    // Carrega os usuários ao montar o componente
     useEffect(() => {
         fetchUsers();
     }, []);
 
     const handleDelete = async (id) => {
         await deleteUser(id);
-        fetchUsers(); // Recarrega a lista após deletar
+        fetchUsers();
     };
 
     return (
@@ -47,7 +45,7 @@ const UserList = () => {
                 ))}
             </ul>
             <Link
-                to="/users/new"
+                to="/users/new" // Rota correta para adicionar usuário
                 className="fixed bottom-8 right-8 bg-futuristic-pink text-white p-4 rounded-full shadow-lg hover:bg-futuristic-purple flex items-center"
             >
                 <FaPlus className="mr-2" /> Add User

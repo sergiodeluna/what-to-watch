@@ -6,20 +6,18 @@ import { Link } from 'react-router-dom';
 const VisualMediaList = () => {
     const [visualMedia, setVisualMedia] = useState([]);
 
-    // Função para carregar as mídias visuais
     const fetchVisualMedia = async () => {
         const response = await getVisualMedia();
         setVisualMedia(response.data);
     };
 
-    // Carrega as mídias visuais ao montar o componente
     useEffect(() => {
         fetchVisualMedia();
     }, []);
 
     const handleDelete = async (id) => {
         await deleteVisualMedia(id);
-        fetchVisualMedia(); // Recarrega a lista após deletar
+        fetchVisualMedia();
     };
 
     return (
@@ -61,7 +59,7 @@ const VisualMediaList = () => {
                 ))}
             </div>
             <Link
-                to="/visual-media/new"
+                to="/visual-media/new" // Rota correta para adicionar mídia visual
                 className="fixed bottom-8 right-8 bg-futuristic-pink text-white p-4 rounded-full shadow-lg hover:bg-futuristic-purple flex items-center"
             >
                 <FaPlus className="mr-2" /> Add Media

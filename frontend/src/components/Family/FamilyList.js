@@ -6,20 +6,18 @@ import { Link } from 'react-router-dom';
 const FamilyList = () => {
     const [families, setFamilies] = useState([]);
 
-    // Função para carregar as famílias
     const fetchFamilies = async () => {
         const response = await getFamilies();
         setFamilies(response.data);
     };
 
-    // Carrega as famílias ao montar o componente
     useEffect(() => {
         fetchFamilies();
     }, []);
 
     const handleDelete = async (id) => {
         await deleteFamily(id);
-        fetchFamilies(); // Recarrega a lista após deletar
+        fetchFamilies();
     };
 
     return (
@@ -49,7 +47,7 @@ const FamilyList = () => {
                 ))}
             </div>
             <Link
-                to="/families/new"
+                to="/families/new" // Rota correta para adicionar família
                 className="fixed bottom-8 right-8 bg-futuristic-pink text-white p-4 rounded-full shadow-lg hover:bg-futuristic-purple flex items-center"
             >
                 <FaPlus className="mr-2" /> Add Family
