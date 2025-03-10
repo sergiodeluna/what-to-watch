@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaHome, FaUsers, FaFilm, FaRocket } from 'react-icons/fa';
+import { FaHome, FaUsers, FaFilm, FaRocket, FaUserFriends } from 'react-icons/fa';
 
 const Navbar = () => {
     return (
@@ -15,6 +15,9 @@ const Navbar = () => {
                     </Link>
                     <Link to="/users" className="text-white hover:text-futuristic-teal flex items-center">
                         <FaUsers className="mr-1" /> Users
+                    </Link>
+                    <Link to="/families" className="text-white hover:text-futuristic-teal flex items-center">
+                        <FaUserFriends className="mr-1" /> Families
                     </Link>
                     <Link to="/visual-media" className="text-white hover:text-futuristic-teal flex items-center">
                         <FaFilm className="mr-1" /> Visual Media
