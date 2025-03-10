@@ -1,21 +1,42 @@
 import React, { useState } from 'react';
 import { createUser, updateUser } from '../../services/api';
 import { FaSave } from 'react-icons/fa';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
-const UserForm = ({ user, onSave }) => {
+const UserForm = ({ user }) => {
     const [name, setName] = useState(user ? user.name : '');
     const [email, setEmail] = useState(user ? user.email : '');
     const [age, setAge] = useState(user ? user.age : '');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const userData = { name, email, age };
-        if (user) {
-            await updateUser(user.id, userData);
-        } else {
-            await createUser(userData);
+        try {
+            if (user) {
+                await updateUser(user.id, userData);
+            } else {
+                await createUser(userData);
+            }
+            // Exibe o pop-up de sucesso
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: user ? 'User updated successfully!' : 'User created successfully!',
+                confirmButtonColor: '#6D28D9',
+            }).then(() => {
+                // Redireciona para a lista de usuários
+                navigate('/users');
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                confirmButtonColor: '#6D28D9',
+            });
         }
-        onSave(); // Chama a função de callback para atualizar a lista
     };
 
     return (

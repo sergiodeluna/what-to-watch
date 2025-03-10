@@ -1,21 +1,42 @@
 import React, { useState } from 'react';
 import { createVisualMedia, updateVisualMedia } from '../../services/api';
 import { FaSave } from 'react-icons/fa';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
-const VisualMediaForm = ({ visualMedia, onSave }) => {
+const VisualMediaForm = ({ visualMedia }) => {
     const [title, setTitle] = useState(visualMedia ? visualMedia.title : '');
     const [star, setStar] = useState(visualMedia ? visualMedia.star : '');
     const [recommendedBy, setRecommendedBy] = useState(visualMedia ? visualMedia.recommendedBy : '');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const mediaData = { title, star, recommendedBy };
-        if (visualMedia) {
-            await updateVisualMedia(visualMedia.id, mediaData);
-        } else {
-            await createVisualMedia(mediaData);
+        try {
+            if (visualMedia) {
+                await updateVisualMedia(visualMedia.id, mediaData);
+            } else {
+                await createVisualMedia(mediaData);
+            }
+            // Exibe o pop-up de sucesso
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: visualMedia ? 'Media updated successfully!' : 'Media created successfully!',
+                confirmButtonColor: '#6D28D9',
+            }).then(() => {
+                // Redireciona para a lista de mídias visuais
+                navigate('/visual-media');
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                confirmButtonColor: '#6D28D9',
+            });
         }
-        onSave(); // Chama a função de callback para atualizar a lista
     };
 
     return (

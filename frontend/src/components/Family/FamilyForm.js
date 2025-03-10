@@ -1,19 +1,40 @@
 import React, { useState } from 'react';
 import { createFamily, updateFamily } from '../../services/api';
 import { FaSave } from 'react-icons/fa';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
-const FamilyForm = ({ family, onSave }) => {
+const FamilyForm = ({ family }) => {
     const [lastName, setLastName] = useState(family ? family.lastName : '');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const familyData = { lastName };
-        if (family) {
-            await updateFamily(family.id, familyData);
-        } else {
-            await createFamily(familyData);
+        try {
+            if (family) {
+                await updateFamily(family.id, familyData);
+            } else {
+                await createFamily(familyData);
+            }
+            // Exibe o pop-up de sucesso
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: family ? 'Family updated successfully!' : 'Family created successfully!',
+                confirmButtonColor: '#6D28D9',
+            }).then(() => {
+                // Redireciona para a lista de famílias
+                navigate('/families');
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                confirmButtonColor: '#6D28D9',
+            });
         }
-        onSave(); // Chama a função de callback para atualizar a lista
     };
 
     return (
