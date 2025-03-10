@@ -16,8 +16,7 @@ What to Watch helps families find the perfect movies and series to enjoy togethe
 
 ### Frontend
 
-- **React** with **TypeScript**: The frontend is built with React and TypeScript, providing a dynamic and responsive user interface.
-- **NestJS**: For handling the API requests and serving data from the backend to the frontend efficiently.
+- **React**: The frontend is built with React, providing a dynamic and responsive user interface.
 
 ## Installation
 
