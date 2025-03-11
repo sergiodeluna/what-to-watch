@@ -1,35 +1,51 @@
-import React, { useState } from 'react';
-import { createVisualMedia, updateVisualMedia } from '../../services/api';
+import React, { useState, useEffect } from 'react';
+import { createVisualMedia, updateVisualMedia, getVisualMediaById } from '../../services/api';
 import { FaSave } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const VisualMediaForm = ({ visualMedia }) => {
-    const [title, setTitle] = useState(visualMedia ? visualMedia.title : '');
-    const [star, setStar] = useState(visualMedia ? visualMedia.star : '');
-    const [recommendedBy, setRecommendedBy] = useState(visualMedia ? visualMedia.recommendedBy : '');
+const VisualMediaForm = () => {
+    const { id } = useParams(); // Obtém o ID da URL (se estiver editando)
+    const [title, setTitle] = useState('');
+    const [star, setStar] = useState('');
+    const [recommendedBy, setRecommendedBy] = useState('');
     const navigate = useNavigate();
+
+    // Carrega os dados da mídia visual se estiver em modo de edição
+    useEffect(() => {
+        if (id) {
+            const fetchVisualMedia = async () => {
+                const response = await getVisualMediaById(id);
+                const media = response.data;
+                setTitle(media.title);
+                setStar(media.star);
+                setRecommendedBy(media.recommendedBy);
+            };
+            fetchVisualMedia();
+        }
+    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const mediaData = { title, star, recommendedBy };
         try {
-            if (visualMedia) {
-                await updateVisualMedia(visualMedia.id, mediaData);
+            if (id) {
+                await updateVisualMedia(id, mediaData); // Atualiza a mídia visual existente
             } else {
-                await createVisualMedia(mediaData);
+                await createVisualMedia(mediaData); // Cria uma nova mídia visual
             }
             // Exibe o pop-up de sucesso
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: visualMedia ? 'Media updated successfully!' : 'Media created successfully!',
+                text: id ? 'Media updated successfully!' : 'Media created successfully!',
                 confirmButtonColor: '#6D28D9',
             }).then(() => {
                 // Redireciona para a lista de mídias visuais
                 navigate('/visual-media');
             });
         } catch (error) {
+            // Exibe o pop-up de erro
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -43,7 +59,7 @@ const VisualMediaForm = ({ visualMedia }) => {
         <div className="min-h-screen bg-gradient-to-b from-futuristic-blue to-futuristic-purple flex items-center justify-center">
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-2xl font-bold text-futuristic-purple mb-4">
-                    {visualMedia ? 'Edit Visual Media' : 'Add Visual Media'}
+                    {id ? 'Edit Visual Media' : 'Add Visual Media'}
                 </h2>
                 <div className="space-y-4">
                     <input

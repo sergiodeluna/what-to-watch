@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { getVisualMedia, deleteVisualMedia } from '../../services/api';
-import { FaFilm, FaTrash, FaPlus, FaStar } from 'react-icons/fa';
+import { FaFilm, FaTrash, FaPlus, FaEdit, FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const VisualMediaList = () => {
     const [visualMedia, setVisualMedia] = useState([]);
 
+    // Função para carregar as mídias visuais
     const fetchVisualMedia = async () => {
         const response = await getVisualMedia();
         setVisualMedia(response.data);
     };
 
+    // Carrega as mídias visuais ao montar o componente
     useEffect(() => {
         fetchVisualMedia();
     }, []);
 
     const handleDelete = async (id) => {
         await deleteVisualMedia(id);
-        fetchVisualMedia();
+        fetchVisualMedia(); // Recarrega a lista após deletar
     };
 
     return (
@@ -36,12 +38,20 @@ const VisualMediaList = () => {
                                     <p className="text-gray-600">Recommended by: {media.recommendedBy}</p>
                                 </div>
                             </div>
-                            <button
-                                onClick={() => handleDelete(media.id)}
-                                className="bg-futuristic-purple text-white px-4 py-2 rounded-lg hover:bg-futuristic-blue flex items-center"
-                            >
-                                <FaTrash className="mr-2" /> Delete
-                            </button>
+                            <div className="flex items-center space-x-4">
+                                <Link
+                                    to={`/visual-media/edit/${media.id}`} // Rota para edição
+                                    className="bg-futuristic-blue text-white px-4 py-2 rounded-lg hover:bg-futuristic-purple flex items-center"
+                                >
+                                    <FaEdit className="mr-2" /> Edit
+                                </Link>
+                                <button
+                                    onClick={() => handleDelete(media.id)}
+                                    className="bg-futuristic-purple text-white px-4 py-2 rounded-lg hover:bg-futuristic-blue flex items-center"
+                                >
+                                    <FaTrash className="mr-2" /> Delete
+                                </button>
+                            </div>
                         </div>
                         <div className="mt-4">
                             <div className="w-full bg-gray-200 rounded-full h-2">
@@ -59,7 +69,7 @@ const VisualMediaList = () => {
                 ))}
             </div>
             <Link
-                to="/visual-media/new" // Rota correta para adicionar mídia visual
+                to="/visual-media/new"
                 className="fixed bottom-8 right-8 bg-futuristic-pink text-white p-4 rounded-full shadow-lg hover:bg-futuristic-purple flex items-center"
             >
                 <FaPlus className="mr-2" /> Add Media

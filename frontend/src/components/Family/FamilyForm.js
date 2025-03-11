@@ -1,33 +1,47 @@
-import React, { useState } from 'react';
-import { createFamily, updateFamily } from '../../services/api';
+import React, { useState, useEffect } from 'react';
+import { createFamily, updateFamily, getFamily } from '../../services/api';
 import { FaSave } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const FamilyForm = ({ family }) => {
-    const [lastName, setLastName] = useState(family ? family.lastName : '');
+const FamilyForm = () => {
+    const { id } = useParams(); // Obtém o ID da URL (se estiver editando)
+    const [lastName, setLastName] = useState('');
     const navigate = useNavigate();
+
+    // Carrega os dados da família se estiver em modo de edição
+    useEffect(() => {
+        if (id) {
+            const fetchFamily = async () => {
+                const response = await getFamily(id);
+                const family = response.data;
+                setLastName(family.lastName);
+            };
+            fetchFamily();
+        }
+    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const familyData = { lastName };
         try {
-            if (family) {
-                await updateFamily(family.id, familyData);
+            if (id) {
+                await updateFamily(id, familyData); // Atualiza a família existente
             } else {
-                await createFamily(familyData);
+                await createFamily(familyData); // Cria uma nova família
             }
             // Exibe o pop-up de sucesso
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: family ? 'Family updated successfully!' : 'Family created successfully!',
+                text: id ? 'Family updated successfully!' : 'Family created successfully!',
                 confirmButtonColor: '#6D28D9',
             }).then(() => {
                 // Redireciona para a lista de famílias
                 navigate('/families');
             });
         } catch (error) {
+            // Exibe o pop-up de erro
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -41,7 +55,7 @@ const FamilyForm = ({ family }) => {
         <div className="min-h-screen bg-gradient-to-b from-futuristic-blue to-futuristic-purple flex items-center justify-center">
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-2xl font-bold text-futuristic-purple mb-4">
-                    {family ? 'Edit Family' : 'Add Family'}
+                    {id ? 'Edit Family' : 'Add Family'}
                 </h2>
                 <div className="space-y-4">
                     <input

@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { getFamilies, deleteFamily } from '../../services/api';
-import { FaUsers, FaTrash, FaPlus } from 'react-icons/fa';
+import { FaUsers, FaTrash, FaPlus, FaEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const FamilyList = () => {
     const [families, setFamilies] = useState([]);
 
+    // Função para carregar as famílias
     const fetchFamilies = async () => {
         const response = await getFamilies();
         setFamilies(response.data);
     };
 
+    // Carrega as famílias ao montar o componente
     useEffect(() => {
         fetchFamilies();
     }, []);
 
     const handleDelete = async (id) => {
         await deleteFamily(id);
-        fetchFamilies();
+        fetchFamilies(); // Recarrega a lista após deletar
     };
 
     return (
@@ -36,18 +38,26 @@ const FamilyList = () => {
                                     <p className="text-gray-600">{family.users.length} members</p>
                                 </div>
                             </div>
-                            <button
-                                onClick={() => handleDelete(family.id)}
-                                className="bg-futuristic-purple text-white px-4 py-2 rounded-lg hover:bg-futuristic-blue flex items-center"
-                            >
-                                <FaTrash className="mr-2" /> Delete
-                            </button>
+                            <div className="flex items-center space-x-4">
+                                <Link
+                                    to={`/families/edit/${family.id}`} // Rota para edição
+                                    className="bg-futuristic-blue text-white px-4 py-2 rounded-lg hover:bg-futuristic-purple flex items-center"
+                                >
+                                    <FaEdit className="mr-2" /> Edit
+                                </Link>
+                                <button
+                                    onClick={() => handleDelete(family.id)}
+                                    className="bg-futuristic-purple text-white px-4 py-2 rounded-lg hover:bg-futuristic-blue flex items-center"
+                                >
+                                    <FaTrash className="mr-2" /> Delete
+                                </button>
+                            </div>
                         </div>
                     </div>
                 ))}
             </div>
             <Link
-                to="/families/new" // Rota correta para adicionar família
+                to="/families/new"
                 className="fixed bottom-8 right-8 bg-futuristic-pink text-white p-4 rounded-full shadow-lg hover:bg-futuristic-purple flex items-center"
             >
                 <FaPlus className="mr-2" /> Add Family

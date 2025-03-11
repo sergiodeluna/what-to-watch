@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers, deleteUser } from '../../services/api';
-import { FaUser, FaTrash, FaPlus } from 'react-icons/fa';
+import { FaUser, FaTrash, FaPlus, FaEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const UserList = () => {
@@ -35,17 +35,25 @@ const UserList = () => {
                                 <p className="text-gray-600">{user.email}</p>
                             </div>
                         </div>
-                        <button
-                            onClick={() => handleDelete(user.id)}
-                            className="bg-futuristic-purple text-white px-4 py-2 rounded-lg hover:bg-futuristic-blue flex items-center"
-                        >
-                            <FaTrash className="mr-2" /> Delete
-                        </button>
+                        <div className="flex items-center space-x-4">
+                            <Link
+                                to={`/users/edit/${user.id}`}
+                                className="bg-futuristic-blue text-white px-4 py-2 rounded-lg hover:bg-futuristic-purple flex items-center"
+                            >
+                                <FaEdit className="mr-2" /> Edit
+                            </Link>
+                            <button
+                                onClick={() => handleDelete(user.id)}
+                                className="bg-futuristic-purple text-white px-4 py-2 rounded-lg hover:bg-futuristic-blue flex items-center"
+                            >
+                                <FaTrash className="mr-2" /> Delete
+                            </button>
+                        </div>
                     </li>
                 ))}
             </ul>
             <Link
-                to="/users/new" // Rota correta para adicionar usuário
+                to="/users/new"
                 className="fixed bottom-8 right-8 bg-futuristic-pink text-white p-4 rounded-full shadow-lg hover:bg-futuristic-purple flex items-center"
             >
                 <FaPlus className="mr-2" /> Add User

@@ -1,32 +1,45 @@
-import React, { useState } from 'react';
-import { createUser, updateUser } from '../../services/api';
+import React, { useState, useEffect } from 'react';
+import { createUser, updateUser, getUser } from '../../services/api';
 import { FaSave } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const UserForm = ({ user }) => {
-    const [name, setName] = useState(user ? user.name : '');
-    const [email, setEmail] = useState(user ? user.email : '');
-    const [age, setAge] = useState(user ? user.age : '');
+const UserForm = () => {
+    const { id } = useParams(); // Obtém o ID da URL (se estiver editando)
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [age, setAge] = useState('');
     const navigate = useNavigate();
+
+    // Carrega os dados do usuário se estiver em modo de edição
+    useEffect(() => {
+        if (id) {
+            const fetchUser = async () => {
+                const response = await getUser(id);
+                const user = response.data;
+                setName(user.name);
+                setEmail(user.email);
+                setAge(user.age);
+            };
+            fetchUser();
+        }
+    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const userData = { name, email, age };
         try {
-            if (user) {
-                await updateUser(user.id, userData);
+            if (id) {
+                await updateUser(id, userData);
             } else {
                 await createUser(userData);
             }
-            // Exibe o pop-up de sucesso
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: user ? 'User updated successfully!' : 'User created successfully!',
+                text: id ? 'User updated successfully!' : 'User created successfully!',
                 confirmButtonColor: '#6D28D9',
             }).then(() => {
-                // Redireciona para a lista de usuários
                 navigate('/users');
             });
         } catch (error) {
@@ -43,7 +56,7 @@ const UserForm = ({ user }) => {
         <div className="min-h-screen bg-gradient-to-b from-futuristic-blue to-futuristic-purple flex items-center justify-center">
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-2xl font-bold text-futuristic-purple mb-4">
-                    {user ? 'Edit User' : 'Add User'}
+                    {id ? 'Edit User' : 'Add User'}
                 </h2>
                 <div className="space-y-4">
                     <input
