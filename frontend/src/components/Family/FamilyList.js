@@ -27,12 +27,21 @@ const FamilyList = () => {
         try {
             const response = await getFamily(id);
             const family = response.data;
-            // Exibe os detalhes da família em um pop-up
+            // Exibe os detalhes da família e a lista de usuários em um pop-up
             Swal.fire({
-                title: 'Family Details',
+                title: `Family: ${family.lastName}`,
                 html: `
                     <p><strong>Last Name:</strong> ${family.lastName}</p>
-                    <p><strong>Members:</strong> ${family.users.length}</p>
+                    <p><strong>Members:</strong></p>
+                    <ul>
+                        ${family.users.map(user => `
+                            <li>
+                                <strong>Name:</strong> ${user.name}, 
+                                <strong>Email:</strong> ${user.email}, 
+                                <strong>Age:</strong> ${user.age}
+                            </li>
+                        `).join('')}
+                    </ul>
                 `,
                 confirmButtonColor: '#6D28D9',
             });

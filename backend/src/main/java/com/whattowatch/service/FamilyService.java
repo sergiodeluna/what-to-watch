@@ -23,7 +23,7 @@ public class FamilyService {
     }
 
     public Optional<Family> findFamilyById(Long id) {
-        return familyRepository.findById(id);
+        return familyRepository.findWithUsersById(id);
     }
 
     public Family saveFamily(Family family) {
