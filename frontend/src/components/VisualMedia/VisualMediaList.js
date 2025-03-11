@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { getVisualMedia, deleteVisualMedia } from '../../services/api';
+import { getVisualMedia, deleteVisualMedia, getVisualMediaById } from '../../services/api';
 import { FaFilm, FaTrash, FaPlus, FaEdit, FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const VisualMediaList = () => {
     const [visualMedia, setVisualMedia] = useState([]);
@@ -19,7 +20,31 @@ const VisualMediaList = () => {
 
     const handleDelete = async (id) => {
         await deleteVisualMedia(id);
-        fetchVisualMedia(); // Recarrega a lista após deletar
+        fetchVisualMedia();
+    };
+
+    const handleViewDetails = async (id) => {
+        try {
+            const response = await getVisualMediaById(id);
+            const media = response.data;
+            // Exibe os detalhes da mídia visual em um pop-up
+            Swal.fire({
+                title: 'Media Details',
+                html: `
+                    <p><strong>Title:</strong> ${media.title}</p>
+                    <p><strong>Rating:</strong> ${media.star} / 5</p>
+                    <p><strong>Recommended By:</strong> ${media.recommendedBy}</p>
+                `,
+                confirmButtonColor: '#6D28D9',
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Failed to fetch media details!',
+                confirmButtonColor: '#6D28D9',
+            });
+        }
     };
 
     return (
@@ -29,7 +54,7 @@ const VisualMediaList = () => {
                 {visualMedia.map(media => (
                     <div key={media.id} className="bg-white p-4 rounded-lg shadow-md animate-fade-in">
                         <div className="flex justify-between items-center">
-                            <div className="flex items-center">
+                            <div className="flex items-center cursor-pointer" onClick={() => handleViewDetails(media.id)}>
                                 <div className="bg-futuristic-teal p-3 rounded-full mr-4">
                                     <FaFilm className="text-white" />
                                 </div>
@@ -40,7 +65,7 @@ const VisualMediaList = () => {
                             </div>
                             <div className="flex items-center space-x-4">
                                 <Link
-                                    to={`/visual-media/edit/${media.id}`} // Rota para edição
+                                    to={`/visual-media/edit/${media.id}`}
                                     className="bg-futuristic-blue text-white px-4 py-2 rounded-lg hover:bg-futuristic-purple flex items-center"
                                 >
                                     <FaEdit className="mr-2" /> Edit

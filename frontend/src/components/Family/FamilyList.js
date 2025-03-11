@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { getFamilies, deleteFamily } from '../../services/api';
+import { getFamilies, deleteFamily, getFamily } from '../../services/api';
 import { FaUsers, FaTrash, FaPlus, FaEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const FamilyList = () => {
     const [families, setFamilies] = useState([]);
@@ -19,7 +20,30 @@ const FamilyList = () => {
 
     const handleDelete = async (id) => {
         await deleteFamily(id);
-        fetchFamilies(); // Recarrega a lista após deletar
+        fetchFamilies();
+    };
+
+    const handleViewDetails = async (id) => {
+        try {
+            const response = await getFamily(id);
+            const family = response.data;
+            // Exibe os detalhes da família em um pop-up
+            Swal.fire({
+                title: 'Family Details',
+                html: `
+                    <p><strong>Last Name:</strong> ${family.lastName}</p>
+                    <p><strong>Members:</strong> ${family.users.length}</p>
+                `,
+                confirmButtonColor: '#6D28D9',
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Failed to fetch family details!',
+                confirmButtonColor: '#6D28D9',
+            });
+        }
     };
 
     return (
@@ -29,7 +53,7 @@ const FamilyList = () => {
                 {families.map(family => (
                     <div key={family.id} className="bg-white p-4 rounded-lg shadow-md animate-fade-in">
                         <div className="flex justify-between items-center">
-                            <div className="flex items-center">
+                            <div className="flex items-center cursor-pointer" onClick={() => handleViewDetails(family.id)}>
                                 <div className="bg-futuristic-teal p-3 rounded-full mr-4">
                                     <FaUsers className="text-white" />
                                 </div>
@@ -40,7 +64,7 @@ const FamilyList = () => {
                             </div>
                             <div className="flex items-center space-x-4">
                                 <Link
-                                    to={`/families/edit/${family.id}`} // Rota para edição
+                                    to={`/families/edit/${family.id}`}
                                     className="bg-futuristic-blue text-white px-4 py-2 rounded-lg hover:bg-futuristic-purple flex items-center"
                                 >
                                     <FaEdit className="mr-2" /> Edit
