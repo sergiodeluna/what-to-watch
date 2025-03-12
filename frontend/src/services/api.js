@@ -15,6 +15,7 @@ export const getFamily = (id) => api.get(`/families/${id}`);
 export const createFamily = (family) => api.post('/families', family);
 export const updateFamily = (id, family) => api.put(`/families/${id}`, family);
 export const deleteFamily = (id) => api.delete(`/families/${id}`);
+export const addUsersToFamily = (familyId, userIds) => api.post(`/families/${familyId}/add-users`, userIds);
 
 export const getVisualMedia = () => api.get('/visual-media');
 export const getVisualMediaById = (id) => api.get(`/visual-media/${id}`);

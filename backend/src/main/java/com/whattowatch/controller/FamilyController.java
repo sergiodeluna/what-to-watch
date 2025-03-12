@@ -43,4 +43,11 @@ public class FamilyController {
         familyService.deleteFamilyById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{familyId}/add-users")
+    public ResponseEntity<Family> addUsersToFamily(@PathVariable Long familyId, @RequestBody List<Long> userIds) {
+        return familyService.addUsersToFamily(familyId, userIds)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

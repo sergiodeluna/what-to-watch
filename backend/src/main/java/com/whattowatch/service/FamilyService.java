@@ -45,4 +45,25 @@ public class FamilyService {
     public void deleteFamilyById(Long id) {
         familyRepository.deleteById(id);
     }
+
+    public Optional<Family> addUsersToFamily(Long familyId, List<Long> userIds) {
+        return familyRepository.findById(familyId).map(family -> {
+            Set<User> usersToAdd = fetchUsersByIds(userIds);
+            addUsersToFamily(family, usersToAdd);
+            return familyRepository.save(family);
+        });
+    }
+
+    private Set<User> fetchUsersByIds(List<Long> userIds) {
+        return userIds.stream()
+                .map(userService::findUserById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
+    }
+
+    private void addUsersToFamily(Family family, Set<User> usersToAdd) {
+        family.getUsers().addAll(usersToAdd);
+        usersToAdd.forEach(user -> user.getFamilies().add(family));
+    }
 }

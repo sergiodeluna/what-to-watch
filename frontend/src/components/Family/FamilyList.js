@@ -1,26 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getFamilies, deleteFamily, getFamily } from '../../services/api';
-import { FaUsers, FaTrash, FaPlus, FaEdit } from 'react-icons/fa';
+import { FaUsers, FaTrash, FaPlus, FaEdit, FaUserPlus } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import AddUsersModal from './AddUsersModal';
 
 const FamilyList = () => {
     const [families, setFamilies] = useState([]);
+    const [showAddUsersModal, setShowAddUsersModal] = useState(false);
+    const [selectedFamilyId, setSelectedFamilyId] = useState(null);
 
+    // Função para buscar as famílias
     const fetchFamilies = async () => {
         const response = await getFamilies();
         setFamilies(response.data);
     };
 
+    // Busca as famílias ao carregar o componente
     useEffect(() => {
         fetchFamilies();
     }, []);
 
+    // Função para deletar uma família
     const handleDelete = async (id) => {
         await deleteFamily(id);
-        fetchFamilies();
+        fetchFamilies(); // Recarrega as famílias após deletar
     };
 
+    // Função para visualizar os detalhes de uma família
     const handleViewDetails = async (id) => {
         try {
             const response = await getFamily(id);
@@ -69,6 +76,15 @@ const FamilyList = () => {
                                 </div>
                             </div>
                             <div className="flex items-center space-x-4">
+                                <button
+                                    onClick={() => {
+                                        setSelectedFamilyId(family.id);
+                                        setShowAddUsersModal(true);
+                                    }}
+                                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center transition-colors"
+                                >
+                                    <FaUserPlus className="mr-2" /> Add Users
+                                </button>
                                 <Link
                                     to={`/families/edit/${family.id}`}
                                     className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center transition-colors"
@@ -92,6 +108,13 @@ const FamilyList = () => {
             >
                 <FaPlus className="mr-2" /> Add Family
             </Link>
+            {showAddUsersModal && (
+                <AddUsersModal
+                    familyId={selectedFamilyId}
+                    onClose={() => setShowAddUsersModal(false)}
+                    onSaveSuccess={fetchFamilies} // Passa a função de callback
+                />
+            )}
         </div>
     );
 };
