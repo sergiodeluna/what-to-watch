@@ -60,18 +60,20 @@ const VisualMediaList = () => {
                                     <p className="text-gray-600">Recommended by: {media.recommendedBy}</p>
                                 </div>
                             </div>
-                            <div className="flex items-center space-x-4">
+                            <div className="flex items-center space-x-2">
                                 <Link
                                     to={`/visual-media/edit/${media.id}`}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center transition-colors"
+                                    className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 flex items-center justify-center transition-colors"
+                                    title="Edit"
                                 >
-                                    <FaEdit className="mr-2" /> Edit
+                                    <FaEdit className="text-lg" />
                                 </Link>
                                 <button
                                     onClick={() => handleDelete(media.id)}
-                                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center transition-colors"
+                                    className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 flex items-center justify-center transition-colors"
+                                    title="Delete"
                                 >
-                                    <FaTrash className="mr-2" /> Delete
+                                    <FaTrash className="text-lg" />
                                 </button>
                             </div>
                         </div>
@@ -92,9 +94,10 @@ const VisualMediaList = () => {
             </div>
             <Link
                 to="/visual-media/new"
-                className="fixed bottom-8 right-8 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 flex items-center transition-colors"
+                className="fixed bottom-8 right-8 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 flex items-center justify-center transition-colors"
+                title="Add Media"
             >
-                <FaPlus className="mr-2" /> Add Media
+                <FaPlus className="text-lg" />
             </Link>
         </div>
     );

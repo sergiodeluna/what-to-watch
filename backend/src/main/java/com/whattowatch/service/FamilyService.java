@@ -6,6 +6,7 @@ import com.whattowatch.repository.FamilyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -43,7 +44,14 @@ public class FamilyService {
     }
 
     public void deleteFamilyById(Long id) {
-        familyRepository.deleteById(id);
+        familyRepository.findById(id).ifPresent(family -> {
+            Set<User> users = new HashSet<>(family.getUsers());
+            users.forEach(user -> user.getFamilies().remove(family));
+            family.getUsers().clear();
+
+            userService.saveAll(users);
+            familyRepository.delete(family);
+        });
     }
 
     public Optional<Family> addUsersToFamily(Long familyId, List<Long> userIds) {

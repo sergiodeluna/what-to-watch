@@ -4,7 +4,7 @@ import { FaUsers, FaTrash, FaPlus, FaEdit, FaUserPlus, FaUserMinus } from 'react
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import AddUsersModal from './AddUsersModal';
-import RemoveUsersModal from './RemoveUsersModal'; // Importar o novo modal
+import RemoveUsersModal from './RemoveUsersModal';
 
 const FamilyList = () => {
     const [families, setFamilies] = useState([]);
@@ -12,24 +12,20 @@ const FamilyList = () => {
     const [showRemoveUsersModal, setShowRemoveUsersModal] = useState(false);
     const [selectedFamilyId, setSelectedFamilyId] = useState(null);
 
-    // Função para buscar as famílias
     const fetchFamilies = async () => {
         const response = await getFamilies();
         setFamilies(response.data);
     };
 
-    // Busca as famílias ao carregar o componente
     useEffect(() => {
         fetchFamilies();
     }, []);
 
-    // Função para deletar uma família
     const handleDelete = async (id) => {
         await deleteFamily(id);
-        fetchFamilies(); // Recarrega as famílias após deletar
+        fetchFamilies();
     };
 
-    // Função para visualizar os detalhes de uma família
     const handleViewDetails = async (id) => {
         try {
             const response = await getFamily(id);
@@ -77,36 +73,40 @@ const FamilyList = () => {
                                     <p className="text-gray-600">{family.users.length} members</p>
                                 </div>
                             </div>
-                            <div className="flex items-center space-x-4">
+                            <div className="flex items-center space-x-2">
                                 <button
                                     onClick={() => {
                                         setSelectedFamilyId(family.id);
                                         setShowAddUsersModal(true);
                                     }}
-                                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center transition-colors"
+                                    className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 flex items-center justify-center transition-colors"
+                                    title="Add Users"
                                 >
-                                    <FaUserPlus className="mr-2" /> Add Users
+                                    <FaUserPlus className="text-lg" />
                                 </button>
                                 <button
                                     onClick={() => {
                                         setSelectedFamilyId(family.id);
                                         setShowRemoveUsersModal(true);
                                     }}
-                                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 flex items-center transition-colors"
+                                    className="bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600 flex items-center justify-center transition-colors"
+                                    title="Remove Users"
                                 >
-                                    <FaUserMinus className="mr-2" /> Remove Users
+                                    <FaUserMinus className="text-lg" />
                                 </button>
                                 <Link
                                     to={`/families/edit/${family.id}`}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center transition-colors"
+                                    className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 flex items-center justify-center transition-colors"
+                                    title="Edit"
                                 >
-                                    <FaEdit className="mr-2" /> Edit
+                                    <FaEdit className="text-lg" />
                                 </Link>
                                 <button
                                     onClick={() => handleDelete(family.id)}
-                                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center transition-colors"
+                                    className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 flex items-center justify-center transition-colors"
+                                    title="Delete"
                                 >
-                                    <FaTrash className="mr-2" /> Delete
+                                    <FaTrash className="text-lg" />
                                 </button>
                             </div>
                         </div>
@@ -115,9 +115,10 @@ const FamilyList = () => {
             </div>
             <Link
                 to="/families/new"
-                className="fixed bottom-8 right-8 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 flex items-center transition-colors"
+                className="fixed bottom-8 right-8 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 flex items-center justify-center transition-colors"
+                title="Add Family"
             >
-                <FaPlus className="mr-2" /> Add Family
+                <FaPlus className="text-lg" />
             </Link>
             {showAddUsersModal && (
                 <AddUsersModal
