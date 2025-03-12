@@ -59,7 +59,7 @@ class FamilyServiceTest {
 
     @Test
     void testFindFamilyById() {
-        when(familyRepository.findById(1L)).thenReturn(Optional.of(family));
+        when(familyRepository.findWithUsersById(1L)).thenReturn(Optional.of(family));
 
         Optional<Family> result = familyService.findFamilyById(1L);
 
