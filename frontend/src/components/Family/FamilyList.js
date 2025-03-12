@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { getFamilies, deleteFamily, getFamily } from '../../services/api';
-import { FaUsers, FaTrash, FaPlus, FaEdit, FaUserPlus } from 'react-icons/fa';
+import { FaUsers, FaTrash, FaPlus, FaEdit, FaUserPlus, FaUserMinus } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import AddUsersModal from './AddUsersModal';
+import RemoveUsersModal from './RemoveUsersModal'; // Importar o novo modal
 
 const FamilyList = () => {
     const [families, setFamilies] = useState([]);
     const [showAddUsersModal, setShowAddUsersModal] = useState(false);
+    const [showRemoveUsersModal, setShowRemoveUsersModal] = useState(false);
     const [selectedFamilyId, setSelectedFamilyId] = useState(null);
 
     // Função para buscar as famílias
@@ -85,6 +87,15 @@ const FamilyList = () => {
                                 >
                                     <FaUserPlus className="mr-2" /> Add Users
                                 </button>
+                                <button
+                                    onClick={() => {
+                                        setSelectedFamilyId(family.id);
+                                        setShowRemoveUsersModal(true);
+                                    }}
+                                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 flex items-center transition-colors"
+                                >
+                                    <FaUserMinus className="mr-2" /> Remove Users
+                                </button>
                                 <Link
                                     to={`/families/edit/${family.id}`}
                                     className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center transition-colors"
@@ -112,7 +123,14 @@ const FamilyList = () => {
                 <AddUsersModal
                     familyId={selectedFamilyId}
                     onClose={() => setShowAddUsersModal(false)}
-                    onSaveSuccess={fetchFamilies} // Passa a função de callback
+                    onSaveSuccess={fetchFamilies}
+                />
+            )}
+            {showRemoveUsersModal && (
+                <RemoveUsersModal
+                    familyId={selectedFamilyId}
+                    onClose={() => setShowRemoveUsersModal(false)}
+                    onSaveSuccess={fetchFamilies}
                 />
             )}
         </div>

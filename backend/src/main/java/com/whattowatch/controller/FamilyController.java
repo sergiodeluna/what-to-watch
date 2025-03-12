@@ -50,4 +50,13 @@ public class FamilyController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PostMapping("/{familyId}/remove-users")
+    public ResponseEntity<Family> removeUsersFromFamily(
+            @PathVariable Long familyId,
+            @RequestBody List<Long> userIds) {
+        return familyService.removeUsersFromFamily(familyId, userIds)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

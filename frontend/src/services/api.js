@@ -16,12 +16,10 @@ export const createFamily = (family) => api.post('/families', family);
 export const updateFamily = (id, family) => api.put(`/families/${id}`, family);
 export const deleteFamily = (id) => api.delete(`/families/${id}`);
 export const addUsersToFamily = (familyId, userIds) => api.post(`/families/${familyId}/add-users`, userIds);
+export const removeUsersFromFamily = (familyId, userIds) => api.post(`/families/${familyId}/remove-users`, userIds);
 
 export const getVisualMedia = () => api.get('/visual-media');
 export const getVisualMediaById = (id) => api.get(`/visual-media/${id}`);
 export const createVisualMedia = (visualMedia) => api.post('/visual-media', visualMedia);
 export const updateVisualMedia = (id, visualMedia) => api.put(`/visual-media/${id}`, visualMedia);
-export const deleteVisualMedia = (id) => api.delete(`/visual-media/${id}`);
-
-// Método para adicionar usuário a uma família (comentário: endpoint não implementado)
-// export const addUserToFamily = (userId, familyId) => api.post(`/families/${familyId}/users/${userId}`);
+export const deleteVisualMedia = (id) => api.delete(`/visual-media/${id}`); 

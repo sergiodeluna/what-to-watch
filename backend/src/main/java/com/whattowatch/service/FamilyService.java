@@ -66,4 +66,17 @@ public class FamilyService {
         family.getUsers().addAll(usersToAdd);
         usersToAdd.forEach(user -> user.getFamilies().add(family));
     }
+
+    public Optional<Family> removeUsersFromFamily(Long familyId, List<Long> userIds) {
+        return familyRepository.findById(familyId).map(family -> {
+            Set<User> usersToRemove = fetchUsersByIds(userIds);
+            removeUsersFromFamily(family, usersToRemove);
+            return familyRepository.save(family);
+        });
+    }
+
+    private void removeUsersFromFamily(Family family, Set<User> usersToRemove) {
+        family.getUsers().removeAll(usersToRemove);
+        usersToRemove.forEach(user -> user.getFamilies().remove(family));
+    }
 }
