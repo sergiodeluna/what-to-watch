@@ -5,13 +5,12 @@ import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const UserForm = () => {
-    const { id } = useParams(); // Obtém o ID da URL (se estiver editando)
+    const { id } = useParams();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [age, setAge] = useState('');
     const navigate = useNavigate();
 
-    // Carrega os dados do usuário se estiver em modo de edição
     useEffect(() => {
         if (id) {
             const fetchUser = async () => {
@@ -53,9 +52,9 @@ const UserForm = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-futuristic-blue to-futuristic-purple flex items-center justify-center">
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-                <h2 className="text-2xl font-bold text-futuristic-purple mb-4">
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 flex items-center justify-center p-6">
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+                <h2 className="text-2xl font-bold text-purple-600 mb-6">
                     {id ? 'Edit User' : 'Add User'}
                 </h2>
                 <div className="space-y-4">
@@ -64,7 +63,7 @@ const UserForm = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Name"
-                        className="w-full p-2 border border-gray-300 rounded-lg"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                         required
                     />
                     <input
@@ -72,7 +71,7 @@ const UserForm = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
-                        className="w-full p-2 border border-gray-300 rounded-lg"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                         required
                     />
                     <input
@@ -80,13 +79,13 @@ const UserForm = () => {
                         value={age}
                         onChange={(e) => setAge(e.target.value)}
                         placeholder="Age"
-                        className="w-full p-2 border border-gray-300 rounded-lg"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                         required
                     />
                 </div>
                 <button
                     type="submit"
-                    className="mt-4 bg-futuristic-teal text-white px-4 py-2 rounded-lg hover:bg-futuristic-blue flex items-center justify-center w-full"
+                    className="mt-6 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 flex items-center justify-center w-full transition-colors"
                 >
                     <FaSave className="mr-2" /> Save
                 </button>
